@@ -2,14 +2,8 @@
   "name": "express-mesto-gha",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "lint": "npx eslint --fix ."
   },
   "eslintConfig": {
     "extends": [
@@ -28,5 +22,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint": "^8.19.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  },
+  "dependencies": {
+
   }
 }
