@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
+const cardRouter = require('./routes/users');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -25,6 +26,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/users', userRouter);
+app.use('/cards', cardRouter);
+
 
 
 app.listen(PORT, () => {
