@@ -8,9 +8,21 @@ const getUsers = (req, res) => {
 
 const getUserID = (req, res) => {
   User.findById(req.params.userId)
-  .then(user => res.send({ data: user }))
-  .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
-}
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Пользователь по указанному id не найден' });
+        return;
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+        return;
+      }
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
+};
 
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
