@@ -21,8 +21,42 @@ const createUser = (req, res) => {
   .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
+const updateUser = (req, res) => {
+  const { name, about } = req.body;
+
+  User.findByIdAndUpdate(
+    req.params.id,
+    { name, about },
+    // Передадим объект опций:
+    {
+        new: true, // обработчик then получит на вход обновлённую запись
+        runValidators: true, // данные будут валидированы перед изменением
+        upsert: true // если пользователь не найден, он будет создан
+    }
+)
+  .then(user => res.send({ data: user }))
+  .catch(user => res.send("Данные не прошли валидацию. Либо произошло что-то совсем немыслимое"));
+};
+
+const updateAvatar = (req, res) => {
+  const { avatar } = req.body;
+
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+    },
+  )
+  .then(user => res.send({ data: user }))
+  .catch(user => res.send( "Данные не прошли валидацию. Либо произошло что-то совсем немыслимое" ));
+};
+
 module.exports = {
   getUsers,
   getUserID,
   createUser,
+  updateUser,
+  updateAvatar
 }
