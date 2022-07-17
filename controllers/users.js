@@ -3,7 +3,7 @@ const User = require('../models/user.js');
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => console.log(err));
+    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 const getUserID = (req, res) => {
