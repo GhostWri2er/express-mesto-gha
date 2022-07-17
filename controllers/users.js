@@ -14,6 +14,7 @@ const getUserID = (req, res) => {
 
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
+  console.log(req.user._id);
 
   User.create({ name, about, avatar })
   .then(user => res.send({ data: user }))
