@@ -18,7 +18,12 @@ const createUser = (req, res) => {
 
   User.create({ name, about, avatar })
   .then(user => res.send({ data: user }))
-  .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+  .catch((err) => {
+  if (err.name === 'ValidationError') {
+    res.status(400).send({ message: 'переданы некорректные данные в методы создания' });
+    return;
+  }
+  })
 };
 
 const updateUser = (req, res) => {
