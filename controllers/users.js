@@ -52,14 +52,14 @@ const updateUser = (req, res) => {
 )
 .then((user) => {
   if (!user) {
-    res.status(400).send({ message: 'Пользователь с указанным id не найден' });
+    res.status(404).send({ message: 'Пользователь с указанным id не найден' });
     return;
   }
   res.send(user);
 })
 .catch((err) => {
-  if (err.name === 'ValidationError') {
-    res.status(404).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
+ if (err.name === 'CastError' || err.name === 'ValidationError') {
+    res.status(400).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
     return;
   }
   res.status(500).send({ message: 'Ошибка сервера' });
