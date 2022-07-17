@@ -10,14 +10,14 @@ const getUserID = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(400).send({ message: 'Пользователь по указанному id не найден' });
+        res.status(404).send({ message: 'Пользователь по указанному id не найден' });
         return;
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+        res.status(400).send({ message: 'Переданы некорректные данные в методы создания' });
         return;
       }
       res.status(500).send({ message: 'На сервере произошла ошибка' });
@@ -32,7 +32,7 @@ const createUser = (req, res) => {
   .then(user => res.send({ data: user }))
   .catch((err) => {
   if (err.name === 'ValidationError') {
-    res.status(400).send({ message: 'переданы некорректные данные в методы создания' });
+    res.status(400).send({ message: 'Переданы некорректные данные в методы создания' });
     return;
   }
   })
@@ -42,17 +42,28 @@ const updateUser = (req, res) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(
-    req.params.id,
+    req.params._id,
     { name, about },
     // Передадим объект опций:
     {
         new: true, // обработчик then получит на вход обновлённую запись
         runValidators: true, // данные будут валидированы перед изменением
-        upsert: true // если пользователь не найден, он будет создан
     }
 )
-  .then(user => res.send({ data: user }))
-  .catch(user => res.send("Данные не прошли валидацию. Либо произошло что-то совсем немыслимое"));
+.then((user) => {
+  if (!user) {
+    res.status(400).send({ message: 'Пользователь с указанным id не найден' });
+    return;
+  }
+  res.send(user);
+})
+.catch((err) => {
+  if (err.name === 'ValidationError') {
+    res.status(404).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
+    return;
+  }
+  res.status(500).send({ message: 'Ошибка сервера' });
+});
 };
 
 const updateAvatar = (req, res) => {
