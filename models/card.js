@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
-const ownerShema = {
-  type: String,
-  required: true,
-}
-
+const ownerShema = new mongoose.Schema({
+  owner: {
+    type: String,
+    required: true,
+  },
+})
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
