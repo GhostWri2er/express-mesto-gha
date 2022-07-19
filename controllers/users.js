@@ -4,7 +4,7 @@ const {ERROR_CODE, NOT_FOUND, SERVER_ERROR} = require('../errors/errors.js');
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch(() => res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' }));
 };
 
 const getUserID = (req, res) => {
@@ -18,7 +18,7 @@ const getUserID = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания' });
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
         return;
       }
       res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
@@ -30,10 +30,10 @@ const createUser = (req, res) => {
   console.log(req.user._id);
 
   User.create({ name, about, avatar })
-  .then((user) => res.status(201).res.send({ data: user }))
+  .then((user) => res.send({ data: user }))
   .catch((err) => {
   if (err.name === 'ValidationError') {
-    res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания' });
+    res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
     return;
   }
   res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
