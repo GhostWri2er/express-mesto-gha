@@ -8,7 +8,7 @@ const getUsers = (req, res) => {
 };
 
 const getUserID = (req, res) => {
-  User.findById(req.params.userId)
+  User.findById(req.user.userId)
     .then((user) => {
       if (!user) {
         res.status(OK).send(user);
