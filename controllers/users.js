@@ -1,5 +1,5 @@
 const User = require('../models/user.js');
-const {ERROR_CODE, NOT_FOUND, SERVER_ERROR} = require('../errors/errors.js');
+const {OK, ERROR_CODE, NOT_FOUND, SERVER_ERROR} = require('../errors/errors.js');
 
 const getUsers = (req, res) => {
   User.find({})
@@ -10,8 +10,8 @@ const getUsers = (req, res) => {
 const getUserID = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
-      if (!user) {
-        res.status(ERROR_CODE).send({ message: 'Пользователь по указанному id не найден' });
+      if (user) {
+        res.status(OK).send(user);
         return;
       }
       res.send(user);
@@ -21,7 +21,7 @@ const getUserID = (req, res) => {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректный id' });
         return;
       }
-      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера2' });
+      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
     });
 };
 
@@ -54,14 +54,14 @@ const updateUser = (req, res) => {
 )
 .then((user) => {
   if (!user) {
-    res.status(404).send({ message: 'Пользователь с указанным id не найден' });
+    res.status(NOT_FOUND).send({ message: 'Пользователь с указанным id не найден' });
     return;
   }
   res.send(user);
 })
 .catch((err) => {
  if (err.name === 'CastError' || err.name === 'ValidationError') {
-    res.status(400).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
+    res.status(NOT_FOUND).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
     return;
   }
   res.status(500).send({ message: 'Ошибка сервера4' });
