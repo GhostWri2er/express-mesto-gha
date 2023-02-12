@@ -20,12 +20,26 @@ const createCard = (req, res) => {
   .catch(err => res.status(400).send({ message: 'Произошла ошибка' }));
 };
 
-const likeCard = (req, res) => Card.findByIdAndUpdate(
+const likeCard = (req, res) => {
+  Card.findByIdAndUpdate(
   req.params.cardId,
   { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
   { new: true },
 )
-
+.then((card) => {
+  if (!card) {
+    res.status(404).send({ message: 'Передан несуществующий _id карточки.' });
+    return;
+  }
+  res.status(200).send(card);
+  }).catch((err) => {
+  if (err.name === 'CastError') {
+    res.status(400).send({ message: 'Переданы некорректные данные для лайка.' });
+  } else {
+    res.status(500).send({ message: `Ошибка сервера` });
+  }
+});
+}
 const dislikeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: req.user._id } }, // убрать _id из массива
