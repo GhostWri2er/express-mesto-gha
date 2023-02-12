@@ -54,18 +54,18 @@ const updateUser = (req, res) => {
 )
 .then((user) => {
   if (!user) {
-
-    res.status(400).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
+    res.status(404).send({ message: 'Пользователь с указанным id не найден' });
     return;
   }
-  res.send(user);
+  res.status(OK).send(user);
 })
 .catch((err) => {
- if (err.name === 'CastError' || err.name === 'ValidationError') {
-  res.status(404).send({ message: 'Пользователь с указанным id не найден' });
+ if (err.name === 'ValidationError') {
+    res.status(400).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
     return;
+  } else {
+    res.status(500).send({ message: 'Ошибка сервера' });
   }
-  res.status(500).send({ message: 'Ошибка сервера4' });
 });
 };
 
