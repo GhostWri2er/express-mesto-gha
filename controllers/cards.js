@@ -8,11 +8,7 @@ const getCards = (req, res) => {
 
 const deleteCard = (req, res) => {
   findByIdAndRemove(req.params.cardId)
-  .then((card) => {
-    res.send({ data: card })
-    res.status(200).send(card)
-  }
-  )
+  .then((card) => res.send({ data: card }))
   .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
 }
 
