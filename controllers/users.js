@@ -21,7 +21,7 @@ const getUserID = (req, res) => {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
         return;
       }
-      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера1' });
     });
 };
 
@@ -36,7 +36,7 @@ const createUser = (req, res) => {
     res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
     return;
   }
-  res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+  res.status(SERVER_ERROR).send({ message: 'Ошибка сервера2' });
   })
 };
 
@@ -64,7 +64,7 @@ const updateUser = (req, res) => {
     res.status(404).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
     return;
   }
-  res.status(500).send({ message: 'Ошибка сервера' });
+  res.status(500).send({ message: 'Ошибка сервера3' });
 });
 };
 
