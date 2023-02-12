@@ -17,7 +17,7 @@ const createCard = (req, res) => {
 
   Card.create({ name, link })
   .then(card => res.send({ data: card }))
-  .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+  .catch(err => res.status(400).send({ message: 'Произошла ошибка' }));
 };
 
 const likeCard = (req, res) => Card.findByIdAndUpdate(
