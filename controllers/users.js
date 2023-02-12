@@ -4,13 +4,13 @@ const {OK, ERROR_CODE, NOT_FOUND, SERVER_ERROR} = require('../errors/errors.js')
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(SERVER_ERROR).send({ message: 'Ошибка сервера1' }));
+    .catch(() => res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' }));
 };
 
 const getUserID = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
-      if (user) {
+      if (!user) {
         res.status(OK).send(user);
         return;
       }
@@ -18,10 +18,10 @@ const getUserID = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Переданы некорректный id' });
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректный id1' });
         return;
       }
-      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера1' });
     });
 };
 
