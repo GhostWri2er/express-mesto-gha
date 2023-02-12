@@ -8,7 +8,7 @@ const getUsers = (req, res) => {
 };
 
 const getUserID = (req, res) => {
-  User.findById(req.user.userId)
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         res.status(OK).send(user);
@@ -18,8 +18,11 @@ const getUserID = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Переданы некорректный id1' });
+        res.status(NOT_FOUND).send({ message: 'Переданы некорректный id' });
         return;
+      }
+      if (err.name === 'NotFound') {
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректный id' });
       }
       res.status(SERVER_ERROR).send({ message: 'Ошибка сервера1' });
     });
