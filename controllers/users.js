@@ -11,18 +11,15 @@ const getUserID = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(OK).send(user);
+        res.status(NOT_FOUND).send({ message: 'Передан некорректный id1' });
         return;
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Переданы некорректный id' });
+        res.status(ERROR_CODE).send({ message: 'Передан некорректный id' });
         return;
-      }
-      if (err.name === 'NotFound') {
-        res.status(NOT_FOUND).send({ message: 'Переданы некорректный id' });
       }
       res.status(SERVER_ERROR).send({ message: 'Ошибка сервера1' });
     });
