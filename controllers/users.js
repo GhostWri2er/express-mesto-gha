@@ -4,7 +4,7 @@ const {ERROR_CODE, NOT_FOUND, SERVER_ERROR} = require('../errors/errors.js');
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' }));
+    .catch(() => res.status(SERVER_ERROR).send({ message: 'Ошибка сервера1' }));
 };
 
 const getUserID = (req, res) => {
@@ -21,7 +21,7 @@ const getUserID = (req, res) => {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
         return;
       }
-      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера1' });
+      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера2' });
     });
 };
 
@@ -36,7 +36,7 @@ const createUser = (req, res) => {
     res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
     return;
   }
-  res.status(SERVER_ERROR).send({ message: 'Ошибка сервера2' });
+  res.status(SERVER_ERROR).send({ message: 'Ошибка сервера3' });
   })
 };
 
@@ -54,17 +54,17 @@ const updateUser = (req, res) => {
 )
 .then((user) => {
   if (!user) {
-    res.status(400).send({ message: 'Пользователь с указанным id не найден' });
+    res.status(404).send({ message: 'Пользователь с указанным id не найден' });
     return;
   }
   res.send(user);
 })
 .catch((err) => {
  if (err.name === 'CastError' || err.name === 'ValidationError') {
-    res.status(404).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
+    res.status(400).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
     return;
   }
-  res.status(500).send({ message: 'Ошибка сервера3' });
+  res.status(500).send({ message: 'Ошибка сервера4' });
 });
 };
 
