@@ -54,10 +54,9 @@ const updateUser = (req, res) => {
 )
 .then((user) => {
   if (!user) {
-    res.status(404).send({ message: 'Пользователь с указанным id не найден' });
+    res.status(404).send({ message: 'Пользователь с указанным id не найден1' });
     return;
   }
-  res.status(OK).send(user);
 })
 .catch((err) => {
  if (err.name === 'ValidationError') {
