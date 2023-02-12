@@ -11,7 +11,7 @@ const getUserID = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Передан некорректный id1' });
+        res.status(NOT_FOUND).send({ message: 'Передан несуществующий id' });
         return;
       }
       res.send(user);
@@ -36,7 +36,7 @@ const createUser = (req, res) => {
     res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
     return;
   }
-  res.status(SERVER_ERROR).send({ message: 'Ошибка сервера3' });
+  res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
   })
 };
 
@@ -50,13 +50,14 @@ const updateUser = (req, res) => {
     {
         new: true, // обработчик then получит на вход обновлённую запись
         runValidators: true, // данные будут валидированы перед изменением
-    }
+    },
 )
 .then((user) => {
   if (!user) {
-    res.status(404).send({ message: 'Пользователь с указанным id не найден1' });
+    res.status(404).send({ message: 'Пользователь с указанным id не найден' });
     return;
   }
+  res.status(OK).send(user);
 })
 .catch((err) => {
  if (err.name === 'ValidationError') {
