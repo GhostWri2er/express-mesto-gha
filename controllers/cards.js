@@ -28,7 +28,7 @@ const likeCard = (req, res) => {
 )
 .then((card) => {
   if (!card) {
-    res.status(404).send({ message: 'Передан несуществующий _id карточки.' });
+    res.status(404).send({ message: 'Передан несуществующий id карточки.' });
     return;
   }
   res.status(200).send(card);
@@ -40,12 +40,27 @@ const likeCard = (req, res) => {
   }
 });
 }
-const dislikeCard = (req, res) => Card.findByIdAndUpdate(
+const dislikeCard = (req, res) => {
+  Card.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: req.user._id } }, // убрать _id из массива
   { new: true },
 )
-
+.then((card) => {
+  if (!card) {
+    res.status(404).send({ message: 'Передан несуществующий id карточки.' });
+    return;
+  }
+  res.send(card);
+}).catch((err) => {
+  if (err.name === 'CastError') {
+    res.status(400).send({ message: 'Переданы некорректные данные для лайка.' });
+  } else {
+    res.status(500).send({ message: `Ошибка сервера` });
+  }
+});
+};
+}
 module.exports = {
   getCards,
   createCard,
