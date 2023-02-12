@@ -59,8 +59,8 @@ const dislikeCard = (req, res) => {
     res.status(500).send({ message: `Ошибка сервера` });
   }
 });
-};
 }
+
 module.exports = {
   getCards,
   createCard,
