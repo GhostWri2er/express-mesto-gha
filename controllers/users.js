@@ -17,8 +17,8 @@ const getUserID = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректный id' });
         return;
       }
       res.status(SERVER_ERROR).send({ message: 'Ошибка сервера2' });
