@@ -6,33 +6,27 @@ const getCards = (req, res) => {
     .catch((err) => console.log(err));
 };
 
-
 const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
-      const userId = req.user._id;
-      const ownerId = card ? card.owner.toString() : null;
-      if (ownerId === null) {
-        return next(res.status(404).send({ message: 'Карточка с указанным id не найдена.'}));
+      if (!card) {
+        next(res.status(404).send({ message: 'Карточка с указанным id не найдена.'}));
       }
-
-      if (userId !== ownerId) {
+      if (card.owner.valueOf() !== req.user._id) {
         return next(res.status(403).send({ message: 'Попытка удаления чужой карточки'}));
       }
-
-      return Card.findByIdAndRemove(req.params.cardId)
-        .orFail(() => {
-          return next(res.status(404).send({ message: 'Карточка с указанным id не найдена.'}));
-        })
-        .then((res) => res.status(200).send({ message: 'Карточка удалена' }))
-        .catch((err) => {
-          if (err.name === 'CastError') {
-            return next(res.status(400).send({ message: 'Данные при удалении переданы не правильно'}));
-          }
-          return next(err);
-        });
-    }).catch(next);
-};
+      Card.findByIdAndRemove(req.params.cardId)
+        .then((removedCard) => res.send({ data: removedCard }))
+        .catch(next);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(res.status(400).send({ message: 'Данные при удалении переданы не правильно'}));
+      } else {
+        next(err);
+      }
+    });
+}
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
