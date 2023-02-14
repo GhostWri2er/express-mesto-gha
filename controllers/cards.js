@@ -22,7 +22,7 @@ const deleteCard = (req, res, next) => {
 
       return Card.findByIdAndRemove(req.params.cardId)
         .orFail(() => {
-          throw new NotFoundError('Передан несуществующий _id карточки.');
+          return next(res.status(404).send({ message: 'Карточка с указанным id не найдена.'}));
         })
         .then(() => res.status(200).send({ message: 'Карточка удалена' }))
         .catch((err) => {
