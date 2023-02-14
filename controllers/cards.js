@@ -24,7 +24,7 @@ const deleteCard = (req, res, next) => {
         .orFail(() => {
           throw new NotFoundError('Передан несуществующий _id карточки.');
         })
-        .then(() => res.status(OK).send({ message: 'Карточка удалена' }))
+        .then(() => res.status(200).send({ message: 'Карточка удалена' }))
         .catch((err) => {
           if (err.name === 'CastError') {
             return next(res.status(400).send({ message: 'Данные при удалении переданы не правильно'}));
