@@ -8,9 +8,25 @@ const getCards = (req, res) => {
 
 const deleteCard = (req, res) => {
   findByIdAndRemove(req.params.cardId)
-  .then((card) => res.send({ data: card }))
-  .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
-}
+  .then((card) => {
+    if (!card) {
+      res.status(404).send({ message: 'Карточка с указанным id не найдена.'});
+    }
+
+    if (card.owner.toString() !== req.user._id) {
+      res.status(403).send({ message: 'Попытка удаления чужой карточки'});
+    }
+
+    return card.remove()
+      .then(() => res.send({ data: card }));
+  })
+  .catch((err) => {
+    if (err.name === 'CastError') {
+      return next(res.status(400).send({ message: 'Данные при удалении переданы не правильно'}));
+    }
+    return next(err);
+  });
+};
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
