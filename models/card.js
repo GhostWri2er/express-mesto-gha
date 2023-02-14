@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+const ownerShema = new mongoose.Schema({
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
+})
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -7,6 +13,7 @@ const cardSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 30,
   },
+  owner: ownerShema,
   link: {
     type: String,
     required: true,
