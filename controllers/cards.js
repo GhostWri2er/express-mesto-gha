@@ -21,9 +21,9 @@ const deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(res.status(400).send({ message: 'Данные при удалении переданы не правильно'}));
+        return next(res.status(400).send({ message: 'Данные при удалении переданы не правильно'}));
       } else {
-        next(err);
+        return next(err);
       }
     });
 }
