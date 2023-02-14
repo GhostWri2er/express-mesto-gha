@@ -24,7 +24,7 @@ const deleteCard = (req, res, next) => {
         .orFail(() => {
           return next(res.status(404).send({ message: 'Карточка с указанным id не найдена.'}));
         })
-        .then(() => res.status(200).send({ message: 'Карточка удалена' }))
+        .then((res) => res.status(200).send({ message: 'Карточка удалена' }))
         .catch((err) => {
           if (err.name === 'CastError') {
             return next(res.status(400).send({ message: 'Данные при удалении переданы не правильно'}));
@@ -63,6 +63,7 @@ const likeCard = (req, res) => {
   }
 });
 }
+
 const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
   req.params.cardId,
