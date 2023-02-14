@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const ownerShema = new mongoose.Schema({
   owner: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true,
   },
 })
