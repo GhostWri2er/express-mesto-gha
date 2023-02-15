@@ -1,5 +1,7 @@
 const express = require('express');
 
+const NotFoundError = require('./errors/notFoundError.js');
+
 const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
@@ -28,6 +30,8 @@ app.use((req, res, next) => {
 
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
+
+app.use('/', (req, res, next) => next(new NotFoundError('Неверный url запрос')));
 
 
 
