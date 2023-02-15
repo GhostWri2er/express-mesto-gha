@@ -10,10 +10,10 @@ const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        next(res.status(404).send({ message: 'Карточка с указанным id не найдена.'}));
+        res.status(404).send({ message: 'Карточка с указанным id не найдена.'});
       }
       if (card.owner.valueOf() !== req.user._id) {
-        return next(res.status(403).send({ message: 'Попытка удаления чужой карточки'}));
+        return res.status(403).send({ message: 'Попытка удаления чужой карточки'});
       }
       Card.findByIdAndRemove(req.params.cardId)
         .then((removedCard) => res.send({ data: removedCard }))
@@ -21,7 +21,7 @@ const deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(res.status(400).send({ message: 'Данные при удалении переданы не правильно'}));
+        return res.status(400).send({ message: 'Данные при удалении переданы не правильно'});
       } else {
         return next(err);
       }
