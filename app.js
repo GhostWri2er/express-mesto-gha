@@ -31,8 +31,9 @@ app.use((req, res, next) => {
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
-app.use('/', (req, res, next) => next(new NotFoundError('Неверный url запрос')));
-
+app.use('/', (req, res, next) => {
+  throw new NotFoundError("Произошла ошибка валидации");
+})
 
 
 app.listen(PORT, () => {
