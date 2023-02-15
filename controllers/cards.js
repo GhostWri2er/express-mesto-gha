@@ -1,4 +1,5 @@
 const Card = require('../models/card.js');
+
 const BadRequestError = require('../errors/badRequestError.js');
 const NotFoundError = require('../errors/notFoundError.js');
 const NotOwnerError = require('../errors/notOwnerError.js');
@@ -13,21 +14,23 @@ const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Карточка не найдена'));
-      } else if (!card.owner.equals(req.user._id)) {
-        next(new NotOwnerError('Попытка удалить чужую карточку'));
-      } else {
-        card.remove().then(() => res.status(200).send({ data: card }));
+        return next(new NotFoundError('Карточка с указанным id не найдена'));
       }
+      if (card.owner.valueOf() !== req.user._id) {
+        return next(new NotOwnerError('Попытка удалить чужую карточку'));
+      }
+      Card.findByIdAndRemove(req.params.cardId)
+        .then((removedCard) => res.send({ data: removedCard }))
+        .catch(next);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные для удаления'));
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Переданы некорректные данные'));
       } else {
-        next(err);
+        return next(err);
       }
     });
-};
+}
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
