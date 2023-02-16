@@ -15,15 +15,15 @@ const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
+        return res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
       }
-      res.status(APPROVED).send({ data: card });
+      return res.status(APPROVED).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Передан несуществующий _id карточки.' });
+        return res.status(ERROR_CODE).send({ message: 'Передан несуществующий _id карточки.' });
       }
-      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -33,9 +33,9 @@ const createCard = (req, res) => {
     .then((card) => res.status(201).send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Ошибка валидации' });
+        return res.status(ERROR_CODE).send({ message: 'Ошибка валидации' });
       }
-      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -53,9 +53,9 @@ const likeCard = (req, res) => {
   })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для лайка.' });
+        return res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для лайка.' });
       } else {
-        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+        return res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
@@ -74,9 +74,9 @@ const dislikeCard = (req, res) => {
       res.send(card);
     }).catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для лайка.' });
+        return res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для лайка.' });
       } else {
-        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+        return res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
     });
 };
