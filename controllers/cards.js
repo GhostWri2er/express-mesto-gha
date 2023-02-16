@@ -16,7 +16,7 @@ const deleteCard = (req, res, next) => {
         return res.status(403).send({ message: 'Попытка удаления чужой карточки'});
       }
       Card.findByIdAndRemove(req.params.cardId)
-        .then((removedCard) => res.send({ data: removedCard }))
+        .then((removedCard) => res.status(200).send({ data: removedCard }))
         .catch(next);
     })
     .catch((err) => {
