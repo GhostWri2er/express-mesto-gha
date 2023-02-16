@@ -31,7 +31,7 @@ const createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link })
     .then((card) => res.status(201).send({ data: card }))
-    .catch(() => res.status(ERROR_CODE).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(ERROR_CODE).send({ message: 'Произошла ошибка валидации' }));
 };
 
 const likeCard = (req, res) => {
