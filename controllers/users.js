@@ -1,5 +1,5 @@
 const User = require('../models/user.js');
-const {OK, ERROR_CODE, NOT_FOUND, SERVER_ERROR} = require('../errors/errors.js');
+const {APPROVED, ERROR_CODE, NOT_FOUND, SERVER_ERROR} = require('../errors/errors.js');
 
 const getUsers = (req, res) => {
   User.find({})
@@ -54,17 +54,17 @@ const updateUser = (req, res) => {
 )
 .then((user) => {
   if (!user) {
-    res.status(404).send({ message: 'Пользователь с указанным id не найден' });
+    res.status(NOT_FOUND).send({ message: 'Пользователь с указанным id не найден' });
     return;
   }
-  res.status(OK).send(user);
+  res.status(APPROVED).send(user);
 })
 .catch((err) => {
  if (err.name === 'ValidationError') {
-    res.status(400).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
+    res.status(ERROR_CODE).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
     return;
   } else {
-    res.status(500).send({ message: 'Ошибка сервера' });
+    res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
   }
 });
 };
