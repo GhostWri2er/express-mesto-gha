@@ -2,7 +2,7 @@ const express = require('express');
 
 const mongoose = require('mongoose');
 
-const NOT_FOUND = require('./errors/errors.js')
+const {NOT_FOUND} = require('../errors/errors.js');
 
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
