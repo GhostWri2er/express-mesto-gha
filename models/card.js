@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const ownerShema = new mongoose.Schema({
   owner: {
-    type: String,
+    type: mongoose.Types.ObjectId,
     required: true,
   },
 })
@@ -17,12 +17,9 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 30,
   },
   likes: [{
-    type: String,
-    required: true,
+    type: mongoose.Types.ObjectId,
     default: [],
   }],
   createdAt: {
