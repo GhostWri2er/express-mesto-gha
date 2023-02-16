@@ -3,7 +3,9 @@
   "rules": {
     "no-underscore-dangle": [
       "error",
+      "no-console", 0,
       { "allow": ["_id"] }
+
     ]
   }
 }

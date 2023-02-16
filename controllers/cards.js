@@ -6,6 +6,7 @@ const {
 
 const getCards = (req, res) => {
   Card.find({})
+    .populate(['owner', 'likes'])
     .then((cards) => res.send({ data: cards }))
     .catch(() => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка сервера' }));
 };
@@ -18,10 +19,9 @@ const deleteCard = (req, res) => {
       }
       res.status(APPROVED).send({ data: card });
     })
-    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Передан несуществующий _id карточки.' });
+        res.status(ERROR_CODE).send({ message: 'Передан несуществующий _id карточки.' });
       }
       res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
@@ -29,9 +29,15 @@ const deleteCard = (req, res) => {
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
-  Card.create({ name, link })
+  const owner = req.user._id;
+  Card.create({ name, link, owner })
     .then((card) => res.status(201).send({ data: card }))
-    .catch(() => res.status(ERROR_CODE).send({ message: 'Произошла ошибка валидации' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(ERROR_CODE).send({ message: 'Ошибка валидации' });
+      }
+      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 const likeCard = (req, res) => {

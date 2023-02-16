@@ -3,8 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
-// eslint-disable-next-line import/extensions
-const { NOT_FOUND } = require('./errors/errors.js');
+
+const { NOT_FOUND } = require('./errors/errors');
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
@@ -35,6 +35,5 @@ app.use((req, res, next) => {
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
-  // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT}`);
 });
