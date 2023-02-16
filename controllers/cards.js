@@ -5,7 +5,7 @@ const {APPROVED, ERROR_CODE, NOT_FOUND, SERVER_ERROR} = require('../errors/error
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => console.log(err));
+    .catch(err => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка сервера' }));
 };
 
 const deleteCard = (req, res) => {
@@ -18,7 +18,7 @@ const deleteCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Передан несуществующий _id карточки.' });
+        return res.status(ERROR_CODE).send({ message: 'Передан несуществующий _id карточки.' });
       }
       res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
@@ -28,7 +28,7 @@ const createCard = (req, res) => {
   const { name, link } = req.body;
 
   Card.create({ name, link })
-  .then(card => res.send({ data: card }))
+  .then(card => res.status(201).send({ data: card }))
   .catch(err => res.status(ERROR_CODE).send({ message: 'Произошла ошибка' }));
 };
 
