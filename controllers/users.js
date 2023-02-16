@@ -1,5 +1,7 @@
-const User = require('../models/user.js');
-const {APPROVED, ERROR_CODE, NOT_FOUND, SERVER_ERROR} = require('../errors/errors.js');
+const User = require('../models/user');
+const {
+  APPROVED, ERROR_CODE, NOT_FOUND, SERVER_ERROR,
+} = require('../errors/errors');
 
 const getUsers = (req, res) => {
   User.find({})
@@ -27,17 +29,15 @@ const getUserID = (req, res) => {
 
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
-  console.log(req.user._id);
-
   User.create({ name, about, avatar })
-  .then((user) => res.send({ data: user }))
-  .catch((err) => {
-  if (err.name === 'ValidationError') {
-    res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
-    return;
-  }
-  res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
-  })
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
+        return;
+      }
+      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+    });
 };
 
 const updateUser = (req, res) => {
@@ -48,25 +48,24 @@ const updateUser = (req, res) => {
     { name, about },
     // Передадим объект опций:
     {
-        new: true, // обработчик then получит на вход обновлённую запись
-        runValidators: true, // данные будут валидированы перед изменением
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
     },
-)
-.then((user) => {
-  if (!user) {
-    res.status(NOT_FOUND).send({ message: 'Пользователь с указанным id не найден' });
-    return;
-  }
-  res.status(APPROVED).send(user);
-})
-.catch((err) => {
- if (err.name === 'ValidationError') {
-    res.status(ERROR_CODE).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
-    return;
-  } else {
-    res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
-  }
-});
+  )
+    .then((user) => {
+      if (!user) {
+        res.status(NOT_FOUND).send({ message: 'Пользователь с указанным id не найден' });
+        return;
+      }
+      res.status(APPROVED).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(ERROR_CODE).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
+        return;
+      }
+      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+    });
 };
 
 const updateAvatar = (req, res) => {
@@ -80,8 +79,8 @@ const updateAvatar = (req, res) => {
       runValidators: true, // данные будут валидированы перед изменением
     },
   )
-  .then(user => res.send({ data: user }))
-  .catch(user => res.send( "Данные не прошли валидацию. Либо произошло что-то совсем немыслимое" ));
+    .then((user) => res.send({ data: user }))
+    .catch(() => res.send('Данные не прошли валидацию. Либо произошло что-то совсем немыслимое'));
 };
 
 module.exports = {
@@ -89,5 +88,5 @@ module.exports = {
   getUserID,
   createUser,
   updateUser,
-  updateAvatar
-}
+  updateAvatar,
+};
