@@ -6,27 +6,44 @@ const getCards = (req, res) => {
     .catch((err) => console.log(err));
 };
 
-const deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId)
+// const deleteCard = (req, res, next) => {
+//   Card.findById(req.params.cardId)
+//     .then((card) => {
+//       if (!card) {
+//         res.status(404).send({ message: 'Карточка с указанным id не найдена.'});
+//       }
+//       res.status(200).send({data : card})
+//       if (card.owner.valueOf() !== req.user._id) {
+//         return res.status(403).send({ message: 'Попытка удаления чужой карточки'});
+//       }
+//       Card.findByIdAndRemove(req.params.cardId)
+//         .then((removedCard) => res.status(200).send({ data: removedCard }))
+//         .catch(next);
+//     })
+//     .catch((err) => {
+//       if (err.name === 'CastError') {
+//         return res.status(400).send({ message: 'Данные при удалении переданы не правильно'});
+//       } else {
+//         console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
+//       }
+//     });
+// }
+
+const deleteCard = (req, res) => {
+  Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Карточка с указанным id не найдена.'});
+        res.status(404).send({ message: 'Карточка с указанным _id не найдена.' });
       }
-      if (card.owner.valueOf() !== req.user._id) {
-        return res.status(403).send({ message: 'Попытка удаления чужой карточки'});
-      }
-      Card.findByIdAndRemove(req.params.cardId)
-        .then((removedCard) => res.status(200).send({ data: removedCard }))
-        .catch(next);
+      res.status(200).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(400).send({ message: 'Данные при удалении переданы не правильно'});
-      } else {
-        console.log(`Произошла неизвестная ошибка ${err.name}: ${err.message}`);
+        res.status(400).send({ message: 'Передан несуществующий _id карточки.' });
       }
+      res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
-}
+};
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
