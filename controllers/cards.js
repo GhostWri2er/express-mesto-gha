@@ -1,11 +1,13 @@
-const Card = require('../models/card.js');
+const Card = require('../models/card');
 
-const {APPROVED, ERROR_CODE, NOT_FOUND, SERVER_ERROR} = require('../errors/errors.js');
+const {
+  APPROVED, ERROR_CODE, NOT_FOUND, SERVER_ERROR,
+} = require('../errors/errors');
 
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(err => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка сервера' }));
+    .catch(() => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка сервера' }));
 };
 
 const deleteCard = (req, res) => {
@@ -16,6 +18,7 @@ const deleteCard = (req, res) => {
       }
       res.status(APPROVED).send({ data: card });
     })
+    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Передан несуществующий _id карточки.' });
@@ -26,59 +29,57 @@ const deleteCard = (req, res) => {
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
-
   Card.create({ name, link })
-  .then(card => res.status(201).send({ data: card }))
-  .catch(err => res.status(ERROR_CODE).send({ message: 'Произошла ошибка' }));
+    .then((card) => res.status(201).send({ data: card }))
+    .catch(() => res.status(ERROR_CODE).send({ message: 'Произошла ошибка' }));
 };
 
 const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
-  req.params.cardId,
-  { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-  { new: true },
-)
-.then((card) => {
-  if (!card) {
-    res.status(NOT_FOUND).send({ message: 'Передан несуществующий id карточки.' });
-    return;
-  }
-  res.status(APPROVED).send(card);
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { new: true },
+  ).then((card) => {
+    if (!card) {
+      res.status(NOT_FOUND).send({ message: 'Передан несуществующий id карточки.' });
+      return;
+    }
+    res.status(APPROVED).send(card);
   })
-.catch((err) => {
-  if (err.name === 'CastError') {
-    res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для лайка.' });
-  } else {
-    res.status(SERVER_ERROR).send({ message: `Ошибка сервера` });
-  }
-});
-}
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для лайка.' });
+      } else {
+        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      }
+    });
+};
 
 const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
-  req.params.cardId,
-  { $pull: { likes: req.user._id } }, // убрать _id из массива
-  { new: true },
-)
-.then((card) => {
-  if (!card) {
-    res.status(NOT_FOUND).send({ message: 'Передан несуществующий id карточки.' });
-    return;
-  }
-  res.send(card);
-}).catch((err) => {
-  if (err.name === 'CastError') {
-    res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для лайка.' });
-  } else {
-    res.status(SERVER_ERROR).send({ message: `Ошибка сервера` });
-  }
-});
-}
+    req.params.cardId,
+    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { new: true },
+  )
+    .then((card) => {
+      if (!card) {
+        res.status(NOT_FOUND).send({ message: 'Передан несуществующий id карточки.' });
+        return;
+      }
+      res.send(card);
+    }).catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для лайка.' });
+      } else {
+        res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      }
+    });
+};
 
 module.exports = {
   getCards,
   createCard,
   deleteCard,
   likeCard,
-  dislikeCard
-}
+  dislikeCard,
+};

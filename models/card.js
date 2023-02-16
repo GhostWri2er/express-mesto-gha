@@ -5,7 +5,7 @@ const ownerShema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     required: true,
   },
-})
+});
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
