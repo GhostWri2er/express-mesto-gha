@@ -58,6 +58,9 @@ const createUser = (req, res) => {
       },
     }))
     .catch((err) => {
+      if (err.code && err.code === 11000) {
+        res.status(409).send('Пользователь с такой почтой уже зарегистрирован');
+      }
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
         return;
