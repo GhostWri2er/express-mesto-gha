@@ -41,6 +41,13 @@ app.use((req, res, next) => {
 app.post('/signin', login);
 app.post('/signup', createUser);
 
+// авторизация
+app.use(auth);
+
+// роуты, которым авторизация нужна
+app.use('/cards', require('./routes/cards'));
+app.use('/users', require('./routes/users'));
+
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
   console.log(`App listening on port ${PORT}`);
