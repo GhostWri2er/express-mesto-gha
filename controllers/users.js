@@ -133,7 +133,7 @@ const login = (req, res) => {
           maxAge: 604_800,
           httpOnly: true,
         });
-       return res.send({ token })
+        res.send({ token })
       .catch((err) => {
         res
           .status(401)
