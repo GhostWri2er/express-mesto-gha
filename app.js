@@ -1,7 +1,6 @@
 const express = require('express');
 
-const login = require('./controllers/users');
-const createUser = require('./controllers/users');
+const { login, createUser } = require('./controllers/users');
 
 const mongoose = require('mongoose');
 
