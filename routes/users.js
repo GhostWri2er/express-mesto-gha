@@ -5,7 +5,7 @@ const {
   getUsers, getUserID, updateUser, updateAvatar, currentUser,
 } = require('../controllers/users');
 
-router.get('/users/me', currentUser);
+router.get('/me', currentUser);
 router.get('/', getUsers);
 
 router.get('/:userId', celebrate({
