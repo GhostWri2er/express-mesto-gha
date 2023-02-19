@@ -1,6 +1,7 @@
 const express = require('express');
 
 const { login, createUser } = require('./controllers/users');
+const auth  = require('./middlewares/auth');
 
 const mongoose = require('mongoose');
 
