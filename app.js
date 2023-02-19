@@ -5,10 +5,13 @@ const auth  = require('./middlewares/auth');
 
 const mongoose = require('mongoose');
 
+const { errors } = require('celebrate');
+
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const { NOT_FOUND } = require('./errors/errors');
+const NotFoundError = require('./errors/not-found-err');
+const errorHandler  = require('./middlewares/errorHandler');
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
@@ -28,7 +31,7 @@ app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
 app.use((req, res, next) => {
-  next(res.status(NOT_FOUND).send({ message: 'Страница не найдена' }));
+  next(new NotFoundError('Страница не найдена'));
 });
 
 app.post('/signin', login);
@@ -40,6 +43,9 @@ app.use(auth);
 // роуты, которым авторизация нужна
 app.use('/cards', require('./routes/cards'));
 app.use('/users', require('./routes/users'));
+
+app.use(errors()); // обработчик ошибок celebrate
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
