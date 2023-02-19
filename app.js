@@ -1,7 +1,7 @@
 const express = require('express');
 
+const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
-const auth  = require('./middlewares/auth');
 
 const mongoose = require('mongoose');
 
@@ -34,11 +34,13 @@ app.use((req, res, next) => {
   next(new NotFoundError('Страница не найдена'));
 });
 
+// авторизация
+app.use(auth);
+
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-// авторизация
-app.use(auth);
+
 
 // роуты, которым авторизация нужна
 app.use('/cards', require('./routes/cards'));

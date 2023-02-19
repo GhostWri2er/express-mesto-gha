@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
+  const JWT_SECRET = 'some-secret-key';
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return res
@@ -14,7 +15,7 @@ const auth = (req, res, next) => {
 
   try {
     // попытаемся верифицировать токен
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
     // отправим ошибку, если не получилось
     return res
