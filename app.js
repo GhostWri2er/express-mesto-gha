@@ -5,12 +5,12 @@ const { login, createUser } = require('./controllers/users');
 
 const mongoose = require('mongoose');
 
-const { errors } = require('celebrate');
+const { errors, celebrate, Joi } = require('celebrate');
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const NotFoundError = require('./errors/not-found-err');
+const ErrorCode = require('./errors/error-code');
 const errorHandler  = require('./middlewares/errorHandler');
 
 const userRouter = require('./routes/users');
@@ -31,14 +31,27 @@ app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
 app.use((req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
+  next(new ErrorCode('Страница не найдена'));
 });
 
 // авторизация
 app.use(auth);
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().regex(/^(https|http)?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i,),
+  }),
+}), createUser);
 
 
 
