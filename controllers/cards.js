@@ -12,16 +12,23 @@ const getCards = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (!card) {
-        return res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
+      if (card) {
+      if (card.owner === req.user._id) {
+        Card.findByIdAndRemove(req.params.cardId)
+          .then(res.status(APPROVED).send({ card }))
+          .catch(() => res.status(SERVER_ERROR).send({ message: "Ошибка сервера" }));
+      } else {
+        res.status(ERROR_CODE).send({ message: 'Нельзя удалить чужую карточку' });
       }
-      return res.status(APPROVED).send({ data: card });
+    } else {
+      res.status(NOT_FOUND).send({ message: 'Такой карточки не существует' });
+    }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Передан несуществующий _id карточки.' });
+        return res.status(ERROR_CODE).send({ message: 'Передан несуществующий id карточки.' });
       }
       return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
