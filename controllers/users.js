@@ -129,4 +129,5 @@ module.exports = {
   createUser,
   updateUser,
   updateAvatar,
+  login,
 };

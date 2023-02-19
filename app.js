@@ -1,5 +1,8 @@
 const express = require('express');
 
+const login = require('./controllers/users');
+const createUser = require('./controllers/users');
+
 const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
@@ -35,6 +38,9 @@ app.use('/cards', cardRouter);
 app.use((req, res, next) => {
   next(res.status(NOT_FOUND).send({ message: 'Страница не найдена' }));
 });
+
+app.post('/signin', login);
+app.post('/signup', createUser);
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
