@@ -49,12 +49,12 @@ app.use(auth)
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
-// app.use((err, req, res, next) => {
-//   const { statusCode = 500, message = "Ошибка сервера" } = err;
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message = "Ошибка сервера" } = err;
 
-//   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
-//     next();
-// });
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
+    next();
+});
 
 app.use('*', (req, res) => res.status(404).send({ message: 'Страница не найдена' }));
 
