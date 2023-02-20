@@ -29,9 +29,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
-// app.use((req, res) => {
-//   res.status(400).send('Страница не найдена');
-// });
+app.use((req, res) => {
+  res.status(400).send('Страница не найдена');
+});
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({

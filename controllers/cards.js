@@ -18,7 +18,7 @@ const deleteCard = (req, res) => {
       res.status(NOT_FOUND).send({ message: 'Такой карточки не существует' });
     }
     if (!card.owner.equals(req.user._id)) {
-      res.status(ERROR_CODE).send({ message: 'Нельзя удалить чужую карточку' });
+      res.status(403).send({ message: 'Нельзя удалить чужую карточку' });
     }
     return card.remove().then(() => res.status(200).send({ data: card }));
   })
