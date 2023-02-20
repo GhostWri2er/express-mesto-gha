@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -10,7 +11,7 @@ const {
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(SERVER_ERROR).send({ message: 'Ошибка серве2ра' }));
+    .catch(() => res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const currentUser = (req, res, next) => {
@@ -38,14 +39,18 @@ const getUserID = (req, res) => {
         res.status(ERROR_CODE).send({ message: 'Передан некорректный id' });
         return;
       }
-      return res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
 const createUser = (req, res) => {
-  const { email, password, name, avatar, about, } = req.body;
+  const {
+    email, password, name, avatar, about,
+  } = req.body;
   bcrypt.hash(password, 10)
-    .then(hash => User.create({ email, password: hash, name, avatar, about }))
+    .then((hash) => User.create({
+      email, password: hash, name, avatar, about,
+    }))
     .then((user) => res.send({
       data: {
         name: user.name,
@@ -57,15 +62,14 @@ const createUser = (req, res) => {
     }))
     .catch((err) => {
       if (err.code && err.code === 11000) {
-        return res.status(409).send({message: 'Пользователь с такой почтой уже зарегистрирован'});
+        return res.status(409).send({ message: 'Пользователь с такой почтой уже зарегистрирован' });
       }
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
         return;
       }
-      return res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
-
 };
 
 const updateUser = (req, res) => {
@@ -92,7 +96,7 @@ const updateUser = (req, res) => {
         res.status(ERROR_CODE).send({ message: 'Данные не прошли валидацию при обновлении пользователя' });
         return;
       }
-      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -111,9 +115,8 @@ const updateAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
-      } else {
-        return res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -124,15 +127,13 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res
         .cookie('jwt', token, {
-          maxAge: 604_800,
+          maxAge: 24 * 7 * 3600,
           httpOnly: true,
         });
 
       return res.send({ token });
     })
-    .catch((err) => {
-      return res.status(401).send({ message: err.message });
-    });
+    .catch((err) => res.status(401).send({ message: err.message }));
 };
 
 module.exports = {

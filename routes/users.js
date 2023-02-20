@@ -1,6 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 const router = require('express').Router();
-const auth = require('../middlewares/auth')
+const auth = require('../middlewares/auth');
 
 const {
   getUsers, getUserID, updateUser, updateAvatar, currentUser,
@@ -38,7 +38,7 @@ router.patch('/me/avatar', celebrate({
       .string()
       .min(2)
       .uri()
-      .regex(/^(https|http)?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i,),
+      .regex(/^(https|http)?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/i),
   }),
 }), updateAvatar);
 

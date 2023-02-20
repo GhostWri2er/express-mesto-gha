@@ -8,20 +8,20 @@ const getCards = (req, res) => {
   Card.find({})
     .populate(['owner', 'likes'])
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(SERVER_ERROR).send({ message: 'Произошла ошибка сервера' }));
+    .catch(() => res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const deleteCard = (req, res) => {
   Card.findById(req.params.cardId)
-  .then((card) => {
-    if (!card) {
-      res.status(NOT_FOUND).send({ message: 'Такой карточки не существует' });
-    }
-    if (!card.owner.equals(req.user._id)) {
-      res.status(403).send({ message: 'Нельзя удалить чужую карточку' });
-    }
-    return card.remove().then(() => res.status(200).send({ data: card }));
-  })
+    .then((card) => {
+      if (!card) {
+        res.status(NOT_FOUND).send({ message: 'Такой карточки не существует' });
+      }
+      if (!card.owner.equals(req.user._id)) {
+        res.status(403).send({ message: 'Нельзя удалить чужую карточку' });
+      }
+      return card.remove().then(() => res.status(200).send({ data: card }));
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Передан несуществующий id карточки.' });
@@ -57,9 +57,8 @@ const likeCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для лайка.' });
-      } else {
-        return res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -78,9 +77,8 @@ const dislikeCard = (req, res) => {
     }).catch((err) => {
       if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для лайка.' });
-      } else {
-        return res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
       }
+      return res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
