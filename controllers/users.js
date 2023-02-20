@@ -125,12 +125,17 @@ const login = (req, res) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-        res.cookie('jwt', token, { maxAge: 604_800, httpOnly: true, });
-        return res.send({ token })
-      .catch((err) => {
-        return res.status(401).send({ message: err.message });
-      });
-  })
+      res
+        .cookie('jwt', token, {
+          maxAge: 604_800,
+          httpOnly: true,
+        });
+
+      return res.send({ token });
+    })
+    .catch((err) => {
+      return res.status(401).send({ message: err.message });
+    });
 };
 
 module.exports = {
