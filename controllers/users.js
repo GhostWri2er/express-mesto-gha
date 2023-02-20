@@ -120,7 +120,7 @@ const updateAvatar = (req, res) => {
     });
 };
 
-const login = (req, res) => {
+const login = (res, req) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -128,16 +128,13 @@ const login = (req, res) => {
         { _id: user._id },
         'some-secret-key',
         { expiresIn: '7d' });
-        res
-        .cookie('jwt', token, {
+        res.cookie('jwt', token, {
           maxAge: 604_800,
           httpOnly: true,
         });
         res.send({ token })
       .catch((err) => {
-        res
-          .status(401)
-          .send({ message: err.message });
+        return res.status(401).send({ message: err.message });
       });
   })
 };

@@ -52,8 +52,8 @@ app.post('/signup', celebrate({
 }), createUser);
 
 // роуты, которым авторизация нужна
-app.use('/cards', auth, require('./routes/cards'));
-app.use('/users', auth, require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
+app.use('/users', require('./routes/users'));
 
 app.use(errors()); // обработчик ошибок celebrate
 app.use(errorHandler);
