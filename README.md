@@ -28,3 +28,6 @@ express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://gith
 
 `npm run start` — запускает сервер  
 `npm run dev` — запускает сервер с hot-reload
+
+## Ссылка на репозиторий
+https://github.com/GhostWri2er/express-mesto-gha
