@@ -13,16 +13,12 @@ const getUsers = (req, res) => {
 };
 
 const currentUser = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.params.userId)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        'some-secret-key',
-        { expiresIn: '7d' });
       if (!user) {
         return res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
       }
-      return res.status(200).send({ data: user, token });
+      return res.status(200).send({ data: user });
     })
     .catch((err) => next(err));
 };
