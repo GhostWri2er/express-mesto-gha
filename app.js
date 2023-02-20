@@ -51,12 +51,20 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
+app.use(auth)
 // роуты, которым авторизация нужна
 app.use('/cards', require('./routes/cards'));
 app.use('/users', require('./routes/users'));
 
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message = "Ошибка сервера" } = err;
+
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
+    next();
+});
+
 app.use(errors()); // обработчик ошибок celebrate
-app.use(errorHandler);
+
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает

@@ -1,15 +1,7 @@
 const errorHandler = ((err, req, res, next) => {
-  // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 401, message = "Ошибка авторизации" } = err;
+  const { statusCode = 500, message = "Ошибка сервера" } = err;
 
-  res
-    .status(statusCode)
-    .send({
-      // проверяем статус и выставляем сообщение в зависимости от него
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message
-    });
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
     next();
 });
 

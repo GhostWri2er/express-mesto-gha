@@ -120,19 +120,13 @@ const updateAvatar = (req, res) => {
     });
 };
 
-const login = (res, req) => {
+const login = (req, res) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        'some-secret-key',
-        { expiresIn: '7d' });
-        res.cookie('jwt', token, {
-          maxAge: 604_800,
-          httpOnly: true,
-        });
-        res.send({ token })
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+        res.cookie('jwt', token, { maxAge: 604_800, httpOnly: true, });
+        return res.send({ token })
       .catch((err) => {
         return res.status(401).send({ message: err.message });
       });
