@@ -30,9 +30,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
-app.use((req, res, next) => {
-  next(new ErrorCode('Страница не найдена'));
-});
+// app.use((req, res) => {
+//   res.status(400).send('Страница не найдена');
+// });
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -51,12 +51,9 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-// авторизация
-app.use(auth);
-
 // роуты, которым авторизация нужна
-app.use('/cards', require('./routes/cards'));
-app.use('/users', require('./routes/users'));
+app.use('/cards', auth, require('./routes/cards'));
+app.use('/users', auth, require('./routes/users'));
 
 app.use(errors()); // обработчик ошибок celebrate
 app.use(errorHandler);

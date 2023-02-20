@@ -46,18 +46,10 @@ const getUserID = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, about, avatar, email, password } = req.body;
+  const { email, password, name, avatar, about, } = req.body;
   bcrypt.hash(password, 10)
-    .then(hash => User.create({ name, about, avatar, email, password: hash, }))
-    .then((user) => res.send({
-      data: {
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-        _id: user._id,
-      },
-    }))
+    .then(hash => User.create({ email, password: hash, name, avatar, about, }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.code && err.code === 11000) {
         res.status(409).send('Пользователь с такой почтой уже зарегистрирован');
