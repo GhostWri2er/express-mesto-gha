@@ -1,6 +1,6 @@
 const errorHandler = ((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message = "Ошибка сервера" } = err;
+  const { statusCode = 401, message = "Ошибка авторизации" } = err;
 
   res
     .status(statusCode)
