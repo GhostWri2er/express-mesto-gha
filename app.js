@@ -56,12 +56,12 @@ app.use(auth)
 app.use('/cards', require('./routes/cards'));
 app.use('/users', require('./routes/users'));
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message = "Ошибка сервера" } = err;
+// app.use((err, req, res, next) => {
+//   const { statusCode = 500, message = "Ошибка сервера" } = err;
 
-  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
-    next();
-});
+//   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
+//     next();
+// });
 
 app.use(errors()); // обработчик ошибок celebrate
 
