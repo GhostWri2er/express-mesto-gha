@@ -56,7 +56,7 @@ app.use('/cards', cardRouter);
 //     next();
 // });
 
-app.use('*', (_, __, next) => next(new NotFoundError({ message: 'Переданы некорректные данные при обновлении аватара.' })));
+app.use('*', (req, res) => res.status(404).send({ message: 'Страница не найдена' }));
 
 app.use(errors()); // обработчик ошибок celebrate
 
