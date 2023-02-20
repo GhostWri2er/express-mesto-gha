@@ -15,7 +15,7 @@ const deleteCard = (req, res) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (card) {
-      if (card.owner === req.user._id) {
+      if (card.owner && card.owner.id === req.user._id) {
         Card.findByIdAndRemove(req.params.cardId)
           .then(res.status(APPROVED).send({ card }))
           .catch(() => res.status(SERVER_ERROR).send({ message: "Ошибка сервера" }));
