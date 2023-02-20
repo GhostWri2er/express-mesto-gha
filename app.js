@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use((req, res) => {
-  res.status(400).send('Страница не найдена');
+  res.status(403).send({ message: 'страница не найдена' });
 });
 
 app.post('/signin', celebrate({
