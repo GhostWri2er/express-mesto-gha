@@ -10,7 +10,7 @@ const { errors, celebrate, Joi } = require('celebrate');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const ErrorCode = require('./errors/error-code');
+const NotFoundError = require('./errors/not-found-err');
 const errorHandler  = require('./middlewares/errorHandler');
 
 const userRouter = require('./routes/users');
@@ -26,12 +26,6 @@ app.use(cookieParser());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
-
-// app.use((req, res) => {
-//   res.status(403).send({ message: 'страница не найдена' });
-// });
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -61,6 +55,8 @@ app.use('/cards', cardRouter);
 //   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
 //     next();
 // });
+
+app.use('*', (_, __, next) => next(new NotFoundError('Страница не найдена')));
 
 app.use(errors()); // обработчик ошибок celebrate
 
