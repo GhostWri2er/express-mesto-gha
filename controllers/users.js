@@ -45,7 +45,7 @@ const getUserID = (req, res) => {
     });
 };
 
-const createUser = (req, res, next) => {
+const createUser = (req, res) => {
   const { email, password, name, avatar, about, } = req.body;
   bcrypt.hash(password, 10)
     .then(hash => User.create({ email, password: hash, name, avatar, about }))
@@ -60,7 +60,7 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code && err.code === 11000) {
-        res.status(409).send({message: 'Пользователь с такой почтой уже зарегистрирован'});
+        return res.status(409).send({message: 'Пользователь с такой почтой уже зарегистрирован'});
       }
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
