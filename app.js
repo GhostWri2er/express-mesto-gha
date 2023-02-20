@@ -27,8 +27,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/users', userRouter);
-app.use('/cards', cardRouter);
+
 
 // app.use((req, res) => {
 //   res.status(400).send('Страница не найдена');
@@ -52,9 +51,9 @@ app.post('/signup', celebrate({
 }), createUser);
 
 app.use(auth)
-// роуты, которым авторизация нужна
-app.use('/cards', require('./routes/cards'));
-app.use('/users', require('./routes/users'));
+
+app.use('/users', userRouter);
+app.use('/cards', cardRouter);
 
 // app.use((err, req, res, next) => {
 //   const { statusCode = 500, message = "Ошибка сервера" } = err;

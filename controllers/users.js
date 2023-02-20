@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+
 const {
   APPROVED, ERROR_CODE, NOT_FOUND, SERVER_ERROR,
 } = require('../errors/errors');
@@ -13,7 +14,7 @@ const getUsers = (req, res) => {
 };
 
 const currentUser = (req, res, next) => {
-  User.findById(req.params.userId)
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         return res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
