@@ -1,6 +1,6 @@
-const router = require('express').Router();
-
 const { celebrate, Joi } = require('celebrate');
+
+const router = require('express').Router();
 
 const {
   getCards, createCard, deleteCard, likeCard, dislikeCard,
@@ -28,7 +28,8 @@ router.post('/', celebrate({
     link: Joi
       .string()
       .uri()
-      .required(),
+      .required()
+      .regex(/^(https|http)?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/i,),
   }),
 }), createCard);
 
